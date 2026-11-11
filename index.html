@@ -159,7 +159,10 @@
 
   /* ===== Tema oscuro ===== */
   :root{--bg:#0b0b0c;--card:#17171a;--ink:#f4f4f5;--muted:#a1a1aa;--line:#2a2a2f;--accent:#facc15;--accent-soft:#2a2306;--ok:#4ade80;--ok-soft:#0f2a1a;--warn-soft:#2a2306}
-  body{background:var(--bg);color:var(--ink)}
+  body{background:var(--bg) url("bg-logos.png") repeat;background-size:280px 280px;background-attachment:fixed;color:var(--ink)}
+  .step.locked{opacity:1} .step.locked .head{opacity:.5}
+  body{background-size:320px 320px}
+  .hero-logo{display:block;width:150px;height:auto;margin:4px 0 14px}
   .bg-logos{position:fixed;inset:0;z-index:-1;pointer-events:none}
   header.top{background:#000;border-bottom:1px solid var(--line)}
   .btn{background:var(--brand);color:#18181b}
@@ -632,6 +635,7 @@ function home(){
   const avisoUrl=FORM_GUIA+"?puntaje="+encodeURIComponent((st.score||QUIZ.length)+"/"+QUIZ.length);
   const grupos=GRUPOS.filter(g=>g.url);
   return `<section class="hero">
+    <img class="hero-logo" src="logo-family.png" alt="Family Center">
     <div class="kicker">Tu acceso al equipo</div>
     <h1>Acceso a Vendedores Externos</h1>
     <p>Seguí estos 5 pasos para sumarte al equipo de Family Center. Tu avance se guarda en este celular: entrá siempre desde el mismo dispositivo.</p>
