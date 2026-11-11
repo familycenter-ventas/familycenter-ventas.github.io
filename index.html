@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acceso a Vendedores Externos Family</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --card:#ffffff; --ink:#18181b; --muted:#52525b; --line:#e4e4e7;
+    --accent:#a16207; --accent-soft:#fef9c3; --ok:#15803d; --ok-soft:#dcfce7; --warn-soft:#fef9c3;
+    --brand:#eab308; --dark:#18181b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Inter",system-ui,sans-serif}
+  h1,h2,h3{font-family:"Inter",system-ui,sans-serif;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin:0 0 .5em}
+  h3{font-weight:700}
+  h1{font-size:2.1rem} h2{font-size:1.7rem} h3{font-size:1.2rem;margin-top:1.4em}
+  p{margin:.5em 0 1em}
+  a{color:var(--accent)}
+  .wrap{max-width:860px;margin:0 auto;padding:20px 18px 80px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:5}
+  header.top .brand{font-weight:800;font-size:1rem;cursor:pointer;color:#fff;letter-spacing:-0.01em}
+  .progress{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--muted)}
+  .bar{width:110px;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+  .ph{background:var(--warn-soft);border-radius:4px;padding:0 4px;font-weight:500}
+  .hero{padding:26px 0 10px}
+  .hero p{color:var(--muted);font-size:1.05rem;max-width:620px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:18px}
+  .mod{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:transform .15s,border-color .15s;position:relative}
+  .mod:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .mod .n{font-size:.8rem;color:var(--accent);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .mod h3{margin:.3em 0 .3em}
+  .mod p{color:var(--muted);font-size:.92rem;margin:0}
+  .mod .done{position:absolute;top:14px;right:14px;background:var(--ok-soft);color:var(--ok);font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:99px;display:none}
+  .mod.is-done .done{display:inline-block}
+  .lesson{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 22px;margin-top:18px}
+  .back{background:none;border:0;color:var(--muted);cursor:pointer;font:inherit;padding:0;margin-top:14px}
+  .back:hover{color:var(--accent)}
+  .box{border-radius:12px;padding:14px 16px;margin:1em 0}
+  .box.rule{background:var(--accent-soft);border-left:4px solid var(--accent)}
+  .box.tip{background:var(--ok-soft);border-left:4px solid var(--ok)}
+  .box.note{background:#f4f4f5;border-left:4px solid #a1a1aa}
+  .box strong:first-child{display:block;margin-bottom:2px}
+  ol.steps{counter-reset:s;list-style:none;padding:0}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 14px 44px}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:grid;place-items:center;font-size:.9rem}
+  .tpl{background:#fafafa;border:1px dashed #d4d4d8;border-radius:10px;padding:12px 14px;margin:.7em 0;white-space:pre-wrap;font-size:.95rem;position:relative}
+  .tpl .lbl{display:block;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .copy{float:right;margin:-4px -4px 0 8px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px 10px;font:inherit;font-size:.8rem;cursor:pointer}
+  .copy:hover{border-color:var(--accent);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1em 0;font-size:.95rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:700;background:#fafafa}
+  .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:1em 0}
+  .calc label{font-size:.85rem;color:var(--muted);display:block}
+  .calc input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+  .result{background:var(--ok-soft);border-radius:12px;padding:14px 16px;font-size:1.05rem}
+  .result b{font-size:1.4rem;color:var(--ok)}
+  details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:.6em 0;background:#fff}
+  summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"Ver respuesta";flex:0 0 auto;font-size:.75rem;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:99px;padding:3px 10px}
+  details[open] summary::after{content:"Cerrar";color:var(--muted);background:#f4f4f5}
+  details[open] summary{margin-bottom:6px}
+  .quiz .q{margin:1.2em 0}
+  .quiz .opt{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0;font:inherit;cursor:pointer}
+  .quiz .opt.right{background:var(--ok-soft);border-color:var(--ok)}
+  .quiz .opt.wrong{background:var(--accent-soft);border-color:var(--accent)}
+  .quiz .fb{font-size:.9rem;color:var(--muted)}
+  .finish{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.done{background:var(--ok)}
+  .admin{margin-top:40px;font-size:.85rem;color:var(--muted);background:#fff;border:1px dashed #d4d4d8;border-radius:12px;padding:14px 16px}
+  .chapters{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;justify-content:flex-start !important;flex-wrap:nowrap !important}
+  .chapters .chap{flex:0 0 auto;padding:8px 14px;font-size:.88rem;border-radius:99px;scroll-snap-align:start;white-space:nowrap}
+  video{max-height:72vh}
+  .bigbar{height:14px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+  .bigbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--ok));width:0;transition:width .5s}
+  .pct{font-weight:800;font-size:2.8rem;line-height:1;letter-spacing:-0.03em}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;position:relative}
+  .step .head{display:flex;gap:12px;align-items:flex-start}
+  .step .num{flex:0 0 36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--line);color:var(--muted)}
+  .step.current{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .step.current .num{background:var(--accent);color:#fff}
+  .step.ok .num{background:var(--ok);color:#fff}
+  .step.locked{opacity:.55}
+  .step h3{margin:.2em 0 .2em}
+  .step p{margin:.2em 0 .6em;color:var(--muted)}
+  .step .status{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+  .step.ok .status{color:var(--ok)} .step.current .status{color:var(--accent)} .step.locked .status{color:var(--muted)}
+  .step .btn{display:inline-block;text-decoration:none;margin-top:6px}
+  .linkish{background:none;border:0;padding:0;color:var(--muted);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;margin-top:8px;display:block}
+  .toast{background:var(--ok-soft);border-left:4px solid var(--ok);border-radius:12px;padding:12px 14px;margin-top:12px}
+  .mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:10px}
+  @media (max-width:560px){.mini{grid-template-columns:1fr 1fr}.step{padding:16px 14px}}
+  .mini .mod{padding:10px 12px}
+  .mini .mod h3{font-size:.95rem;margin:.1em 0 0}
+  .mini .mod .n{font-size:.7rem}
+  .mini .mod .done{top:8px;right:8px;font-size:.65rem}
+  @media (max-width:560px){
+    body{font-size:16px}
+    h1{font-size:1.65rem} h2{font-size:1.5rem} h3{font-size:1.15rem}
+    header.top{padding:10px 12px}
+    header.top .brand{font-size:1rem}
+    .bar{width:60px}
+    .wrap{padding:8px 10px 60px}
+    .hero{padding:16px 6px 4px}
+    .grid{gap:10px}
+    .mod{padding:16px}
+    .back{margin:10px 6px 0;padding:6px 0}
+    .lesson{padding:20px 14px;border-radius:12px;margin-top:10px}
+    .box{padding:12px 14px}
+    ol.steps li{padding-left:40px}
+    .copy{padding:6px 12px}
+    .finish{flex-direction:column;align-items:stretch}
+    .finish .btn{width:100%}
+    /* tablas como tarjetas apiladas */
+    table,tbody,tr,td{display:block;width:100%}
+    tr:first-child{display:none}
+    tr{border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin-bottom:10px;background:#fff}
+    td{border:0;padding:5px 0}
+    td[data-label]::before{content:attr(data-label);display:block;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+    .calc{grid-template-columns:1fr 1fr;align-items:end}
+  }
+
+  /* ===== Opción A · Marca Family ===== */
+  header.top{background:var(--dark);border-bottom:0}
+  header.top .progress{color:#d4d4d8}
+  header.top .bar{background:#3f3f46}
+  .bar i,.bigbar i{background:var(--brand) !important}
+  .btn{background:var(--dark);color:#fff;border-radius:10px}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.done{background:var(--ok)}
+  .btn.main{background:var(--dark)}
+  ol.steps li::before{background:var(--brand);color:var(--dark)}
+  .box.rule{background:#fefce8;border-left-color:var(--brand)}
+  .step.current{border-color:var(--brand);box-shadow:0 0 0 3px #fef9c3}
+  .step.current .num{background:var(--brand);color:var(--dark)}
+  .step.ok .num{background:var(--dark);color:var(--brand)}
+  .step.ok .status{color:#3f3f46}
+  .step.current .status{color:var(--accent)}
+  .mod:hover{border-color:var(--brand)}
+  .mod .n{color:var(--accent)}
+  .mod .done{background:var(--dark);color:var(--brand)}
+  .mini .mod.is-done{background:#fefce8;border-color:#fde68a}
+  .lesson,.step,.mod{border-radius:14px}
+  summary::after{color:#713f12;background:#fef9c3}
+  .quiz .opt.wrong{background:#fee2e2;border-color:#dc2626}
+  .copy:hover{border-color:var(--dark);color:var(--dark)}
+  .chapters .chap{border-radius:99px}
+  input:focus,textarea:focus{outline:2px solid var(--brand)}
+  .pill{font-size:.7rem;font-weight:700;background:var(--brand);color:var(--dark);border-radius:99px;padding:3px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+  @media (max-width:560px){.pill{display:none}}
+  .kicker{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand" onclick="go('')">Family Center <span class="pill">Vendedores Externos</span></div>
+  <div class="progress"><span id="ptext">0%</span><div class="bar"><i id="pbar"></i></div></div>
+</header>
+
+<div class="wrap" id="app"></div>
+
+<script>
+const MODULES = [
+{id:"bienvenida", t:"Bienvenida y cómo ganás", d:"Cómo funciona el equipo de vendedores externos y de dónde sale tu comisión.", html:`
+<h2>Bienvenida al equipo</h2>
+<p>¡Qué bueno tenerte! Esta guía tiene todo lo que necesitás para empezar a vender desde tu casa, a tu ritmo y sin depender de nadie. Recorré los módulos en orden: en menos de una hora vas a estar lista o listo para tu primera venta.</p>
+
+<h3>¿Qué es un vendedor externo?</h3>
+<p>Sos parte del equipo de Family Center, pero vendés desde tu casa, con tus contactos y tus redes. Ofrecés los mismos productos que tenemos en la tienda, al mismo precio.</p>
+
+<h3>¿Cómo ganás tu comisión?</h3>
+<p>Vos accedés a nuestros productos a <b>precio Mayorista 2</b> y los vendés a <b>precio minorista</b>. La diferencia entre los dos es tu ganancia, y la generás <b>en cada venta</b>.</p>
+<div class="box tip"><strong>Ejemplos</strong>
+• Producto con precio minorista de Gs. 100.000 y Mayorista 2 de Gs. 85.000: ganás <b>Gs. 15.000</b> por unidad.<br>
+• Producto con precio minorista de Gs. 1.100.000 y Mayorista 2 de Gs. 1.050.000: ganás <b>Gs. 50.000</b> por unidad.</div>
+<div class="box note"><strong>Importante</strong>Estos montos son solo ejemplos para que entiendas la cuenta. La comisión cambia según el producto. Tu ganancia depende de cuánto vendas, y crece con la constancia.</div>
+<div class="box note"><strong>¿Cuándo cobrás?</strong>Una vez por mes: lo que vendas en un mes se paga entre el <b>2 y el 4 del mes siguiente</b>, después del cierre, por <b>transferencia</b>. Junto con el pago recibís un <b>PDF con el detalle de cada venta</b> y la comisión de cada una.</div>
+
+<h3>Calculá tu ganancia</h3>
+<p>Poné una comisión aproximada por venta y cuántas ventas creés que podés hacer por semana.</p>
+<div class="calc">
+  <div><label>Comisión por venta (Gs.)</label><input id="c1" type="number" inputmode="numeric" value="15000"></div>
+  <div><label>Ventas por semana</label><input id="c3" type="number" inputmode="numeric" value="5"></div>
+</div>
+<div class="result" id="cres"></div>
+
+<div class="box rule"><strong>La regla de oro: el precio no se toca</strong>No podés subir ni bajar el precio minorista, ni hacer descuentos por tu cuenta. Si bajás el precio, la diferencia sale de tu propia comisión. Si lo subís, el cliente encuentra el producto más barato en la tienda y perdés la venta y la confianza. Todos vendemos al mismo precio: eso protege tu ganancia y la de todo el equipo.</div>
+`},
+{id:"primeros-pasos", t:"Primeros pasos", d:"Qué necesitás para arrancar y cómo darte de alta.", html:`
+<h2>Primeros pasos</h2>
+<h3>Lo que necesitás</h3>
+<div class="box tip"><strong>No necesitás invertir nada</strong>Para empezar solo hacen falta tu celular, acceso a internet y muchas ganas de vender.</div>
+<div class="box rule"><strong>Mínimo de ventas</strong>Para seguir en el equipo tenés que vender como mínimo <b>Gs. 200.000 por mes</b>.</div>
+<ul>
+  <li>Un celular con acceso a internet y WhatsApp (idealmente WhatsApp Business, que es gratis).</li>
+  <li>Una cuenta de Facebook y/o Instagram para publicar.</li>
+  <li>Ganas de dedicarle un rato todos los días: la constancia es lo que más vende.</li>
+</ul>
+
+<h3>Cómo te das de alta</h3>
+<ol class="steps">
+  <li><b>Completá el formulario</b> con tus datos: <a href="https://tally.so/r/aO5drE" target="_blank" rel="noopener">formulario de inscripción</a>.</li>
+  <li><b>Completá esta guía</b> módulo por módulo y aprobá la <a href="#evaluacion">evaluación final</a>.</li>
+  <li><b>Avisanos que terminaste</b> con el botón que aparece al aprobar la evaluación.</li>
+  <li><b>Recibí tu usuario y contraseña.</b> Con tus datos te creamos un acceso a nuestra aplicación de Pre-ventas (<a href="https://familycenter.top/" target="_blank" rel="noopener">familycenter.top</a>). Ahí vas a tener todo: el stock disponible, los precios de venta y la carga de tus pedidos.</li>
+  <li><b>Unite a los dos grupos de WhatsApp</b> que te pasamos junto con tu acceso (los vemos abajo).</li>
+  <li><b>Entrá a la app y recorrela:</b> mirá los productos, los precios y tu catálogo para compartir.</li>
+  <li><b>Configurá tu WhatsApp Business</b> (lo vemos en el módulo 4) y compartí tu catálogo por primera vez.</li>
+</ol>
+
+<h3>La app: tu herramienta de trabajo</h3>
+<ul>
+  <li><b>Stock en tiempo real:</b> siempre ves lo que hay disponible, sin tener que preguntar ni descargar nada.</li>
+  <li><b>Precios de venta:</b> ves el precio minorista de cada producto, que es el precio al que vendés.</li>
+  <li><b>Carga de pedidos:</b> todos tus pedidos se cargan desde la app, sean con delivery o con retiro en el local.</li>
+  <li><b>Reclamos y cambios:</b> desde ahí se cargan los cambios de productos con falla.</li>
+  <li><b>Tu catálogo personal:</b> un catálogo para compartir con tus clientes que los lleva directo a tu WhatsApp.</li>
+</ul>
+
+<h3>Los dos grupos de WhatsApp</h3>
+<table>
+<tr><th>Grupo</th><th>Para qué sirve</th></tr>
+<tr><td><b>Vendedores Externos</b></td><td>Es el grupo donde informamos todo: productos nuevos que llegan, novedades y avisos importantes. Ahí también compartimos las <b>fotos de los productos en buena calidad</b> para que uses en tus publicaciones.</td></tr>
+<tr><td><b>La Nueva Era</b> (Consultas)</td><td>Para tus dudas, desde las más simples hasta las más específicas que todavía no se pueden resolver desde la app.</td></tr>
+</table>
+
+<div class="box note"><strong>Antes de consultar</strong>Revisá primero la app y las <a href="#preguntas">Preguntas frecuentes</a>: casi todo está ahí. Si no encontrás la respuesta, escribí en el grupo de Consultas.</div>
+`},
+{id:"cargar-pedidos", t:"Cómo cargar un pedido", d:"El paso a paso en la app, con video, desde el catálogo hasta el seguimiento.", html:`
+<h2>Cómo cargar un pedido</h2>
+<p>Todos los pedidos se cargan desde la app. Mirá primero el video y después usá el paso a paso escrito para repasar cuando lo necesites.</p>
+<p id="vidmsg" style="text-align:center;color:var(--muted);font-size:.9rem;margin:.6em 0 0">Cargando video…</p>
+<video id="vid" poster="poster.png" controls playsinline preload="metadata" style="display:block;width:100%;max-width:360px;margin:1em auto;border-radius:16px;background:#18181b"></video>
+<p style="text-align:center;font-size:.85rem;color:var(--muted);margin-bottom:.4em">Saltá directo a cada parte:</p>
+<div class="chapters" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">
+  <button class="btn ghost chap" data-t="3.5">1 · Catálogo</button>
+  <button class="btn ghost chap" data-t="59.5">2 · Carrito y grabado</button>
+  <button class="btn ghost chap" data-t="74.5">3 · Entrega</button>
+  <button class="btn ghost chap" data-t="112.5">4 · Cliente</button>
+  <button class="btn ghost chap" data-t="154.5">5 · Pago</button>
+  <button class="btn ghost chap" data-t="210.5">6 · Resumen y envío</button>
+  <button class="btn ghost chap" data-t="219.5">7 · Seguimiento</button>
+</div>
+
+<h3>Antes de empezar: pedile estos datos al cliente</h3>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Plantilla · Datos del cliente</span>¡Perfecto! Para cargar tu pedido necesito:
+• Número de cédula (o RUC si necesitás factura). Para retiro en el local es opcional:
+• Nombre y apellido:
+• Número de celular:
+• Tu ubicación de Google Maps (si es delivery):
+• Una referencia de tu casa (color, portón, algo que se vea):
+• Forma de pago: efectivo, QR/billetera, tarjeta o transferencia
+• ¿Vas a estar disponible durante el día para recibir? (el delivery llega en el transcurso del día)
+• ¿Necesitás factura?</div>
+
+<h3>1. Agregá los productos</h3>
+<ol class="steps">
+  <li>Abrí el menú <b>☰</b> y entrá en <b>Realizar pedido</b>. Se abre el <b>Catálogo</b>.</li>
+  <li>Buscá el producto por nombre o filtrá por <b>categoría</b>, <b>marca</b>, <b>Novedades</b> o <b>Solo con fotos</b>. Cada producto muestra su código, el precio y el <b>stock disponible</b>.</li>
+  <li>Tocá el botón del <b>carrito</b> para agregarlo. El número sobre el carrito te indica cuántos productos llevás.</li>
+</ol>
+<div class="box tip"><strong>Servicios como el grabado personalizado</strong>No están en la categoría del producto: aparecen como <b>servicio</b> en la categoría <b>Varios</b>. Lo más rápido es escribir “grabado” en el buscador.</div>
+
+<h3>2. Revisá el carrito (pestaña Productos)</h3>
+<ol class="steps">
+  <li>Tocá el carrito para abrir <b>Mi Pedido</b>. Ajustá la cantidad con <b>– / +</b> y quitá con el ícono rojo lo que no va.</li>
+  <li>En <b>Observación</b> anotá color, talle o modelo, y si hace falta adjuntá una foto.</li>
+  <li><b>Si lleva grabado:</b> elegí la <b>tipografía</b> que pidió el cliente (podés mostrarle las opciones con “Fuentes ejemplo”), escribí el texto a grabar y revisá la vista previa.</li>
+  <li>Tocá <b>Siguiente</b>.</li>
+</ol>
+
+<h3>3. Entrega</h3>
+<ol class="steps">
+  <li>Elegí el tipo de venta: <b>Delivery</b>, <b>Encomienda</b> o <b>Retiro</b> en el local. Los retiros son en la sucursal de <b>Eusebio Ayala</b>, frente al Colegio Nacional de la Capital, de <b>7:30 a 17:00</b>. Cargá vos también los pedidos para retiro: así la venta queda a tu nombre.</li>
+  <li><b>Para delivery:</b> pedile al cliente su ubicación de Google Maps y pegá el link en <b>Coordenadas</b>. Esperá 2 o 3 segundos: la latitud, la longitud, la ciudad y el barrio se completan solos.</li>
+  <li>Completá calle principal, calle lateral y número de casa, si los tenés.</li>
+  <li>La <b>Referencia es obligatoria</b> (por ejemplo, “casa naranja, portón negro”). Es lo que más ayuda al motorista a encontrar la casa.</li>
+  <li>La app calcula sola la <b>zona y el costo del delivery</b> y lo suma al total (por ejemplo, Zona 1: Gs. 20.000).</li>
+</ol>
+<div class="box rule"><strong>Horario de entrega: nunca prometas una hora exacta</strong>El delivery sale en <b>tandas</b>: hoy tenemos <b>dos por día</b>, una a la mañana y otra a la tarde, y cada una sale según la cantidad de pedidos que haya. Por eso no podemos asegurar que lleguemos a una ubicación a una hora específica.<br><br>
+Decile siempre al cliente que su pedido <b>le llega en el transcurso del día</b>, y tratá de conseguir el <b>horario más flexible posible</b>: cuanto más amplio, más fácil es entregarle sin problemas.</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Cómo explicarle el horario al cliente</span>Tu pedido te va a estar llegando en el transcurso del día 🚚 Nuestros deliverys salen por tandas, así que no te puedo dar una hora exacta. ¿Vas a estar disponible durante el día para recibirlo? Si hay algún horario en el que seguro no podés, avisame y lo anoto.</div>
+
+<h3>Pedidos para retiro: con seña o sin seña</h3>
+<p>Este es el punto que más confusión genera. Un pedido para retiro funciona muy distinto según tenga seña o no:</p>
+<table>
+<tr><th></th><th>Con seña (mínimo 20%)</th><th>Sin seña</th></tr>
+<tr><td><b>¿Se prepara?</b></td><td>Sí. El pedido se prepara y está <b>listo cuando el cliente pasa</b>.</td><td>No. Se prepara recién <b>cuando el cliente llega al local</b>.</td></tr>
+<tr><td><b>¿El producto está asegurado?</b></td><td>Sí, queda guardado para el cliente.</td><td>No. Se puede vender en el salón antes de que llegue.</td></tr>
+<tr><td><b>¿Cuánto dura?</b></td><td>Queda esperando al cliente.</td><td><b>Caduca y se elimina automáticamente</b> a las 17:00–17:30 de ese día.</td></tr>
+</table>
+<div class="box note"><strong>¿Por qué funciona así?</strong>Muchas veces se cargaron pedidos de clientes que dijeron “voy a pasar” y nunca pasaron. Mientras tanto, ese producto quedaba apartado y no se le podía vender a otra persona. Por eso, sin seña, el pedido no se prepara ni se guarda.</div>
+
+<div class="box rule"><strong>Siempre explicale esto al cliente</strong>Si cargás un pedido sin seña, no alcanza con pasarle el número de pedido: <b>avisale que no va a estar preparado</b> y que el producto <b>se puede vender antes</b> de que llegue. Ya pasó que un cliente llegó al local con su número de pedido y el producto se había vendido en el salón, porque la vendedora no le avisó ni se fijó en la app que el pedido había caducado.</div>
+
+<h3>Cuando queda la última unidad</h3>
+<p>Si en la app ves que queda <b>una sola unidad</b>, recomendale siempre al cliente que deje una seña para asegurarla.</p>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Última unidad · recomendar seña</span>¡Te aviso que nos queda la última unidad! 🙌 Para asegurártela, te recomiendo dejar una seña mínima del 20%: así tu pedido queda preparado y listo para cuando pases a retirar. Sin seña no te lo puedo guardar y existe el riesgo de que se venda antes.</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Retiro sin seña · aviso al cliente</span>¡Listo, ya cargué tu pedido! Tu número es #[NÚMERO]. Te aviso algo importante: como es sin seña, el pedido no queda preparado ni guardado. Se prepara cuando llegás al local y, si alguien lo compra antes en el salón, se puede terminar. Además, el pedido vence hoy a las 17:00. Te esperamos en la sucursal de Eusebio Ayala, frente al Colegio Nacional de la Capital 😊</div>
+
+<div class="box note"><strong>Retiros solo en Eusebio Ayala</strong>Tenemos dos sucursales, pero los pedidos se retiran <b>solamente en Eusebio Ayala</b> (frente al Colegio Nacional de la Capital), porque está mejor ubicada y tiene estacionamiento. A veces un producto está en la otra sucursal, la del Mercado, que no se usa para retiros: otra razón para que el pedido con seña sea la opción más segura.</div>
+
+<h3>Cliente apurado: retiro con moto Bolt</h3>
+<p>Algunos clientes no quieren esperar la tanda de delivery y prefieren mandar a buscar su pedido con una moto Bolt. En ese caso:</p>
+<ol class="steps">
+  <li>Cargá el pedido como <b>Retiro</b> (no como delivery).</li>
+  <li>Esperá a que en la app el pedido aparezca como <b>Listo</b>.</li>
+  <li>Recién ahí avisale al cliente que pida el Bolt y pasale el <b>número de pedido</b>.</li>
+  <li>El motorista entra al local, dice el <b>número de pedido</b> y se le entrega.</li>
+</ol>
+<div class="box rule"><strong>El número de pedido es la clave</strong>No alcanza con que el motorista diga “vengo a retirar el pedido de Fulana”: muchas veces el pedido lo hizo otra persona y se arma un lío para encontrarlo. Con el número de pedido se entrega rápido y sin errores. Y no le digas al cliente que pida el Bolt antes de que el pedido esté listo.</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Pedido listo · retiro con Bolt</span>¡Tu pedido ya está listo! 🙌 Ya podés pedir tu Bolt. Que vaya a la sucursal de Eusebio Ayala (frente al Colegio Nacional de la Capital) y diga este número de pedido: #[NÚMERO]. Pasale el número al motorista, así se lo entregan enseguida 😊</div>
+
+<h3>4. Cliente</h3>
+<ol class="steps">
+  <li>Escribí el número de <b>cédula o RUC</b>. Si el cliente ya está registrado, su nombre aparece automáticamente.</li>
+  <li>Completá el <b>celular</b>, el <b>nombre</b> y el apellido.</li>
+</ol>
+<div class="box note"><strong>¿Por qué importa la cédula?</strong>Al aparecer el nombre registrado podés verificar que la persona que te escribe es quien dice ser. Así evitamos posibles estafas.</div>
+<div class="box tip"><strong>Retiro: si el cliente no quiere pasar su cédula</strong>A muchos clientes les da desconfianza pasar su número de cédula por miedo a estafas. <b>Solo para pedidos de retiro</b>, podés cargarlo como <b>cliente indefinido</b>: en lugar del número de cédula escribí <b>XXX</b> y la app lo reconoce así. Completá igual el nombre y el celular para poder contactarlo. Si el cliente necesita factura, sí hace falta su RUC.</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Cliente que no quiere pasar su cédula · retiro</span>¡No hay problema! Como vas a retirar en el local, no necesito tu cédula. Solo pasame tu nombre y tu número de celular para cargar el pedido 😊</div>
+
+<h3>5. Pago</h3>
+<ol class="steps">
+  <li>Elegí la <b>forma de pago</b>: Efectivo, POS – QR / Billetera, POS – Tarjeta de crédito o Transferencia. Sin este dato la app no te deja avanzar.</li>
+  <li>En <b>Observación del pedido</b> anotá lo que deba saber el equipo (por ejemplo, “si no está, dejar con el portero” o “no está entre 12 y 14 h”). Si el cliente pone una restricción de horario, anotala acá, pero recordale que la entrega es en el transcurso del día.</li>
+  <li>Si el cliente necesita <b>factura</b>, activá “¿El cliente requiere factura?” y volvé a la pestaña <b>Cliente</b> para cargar el RUC completo, con el número después del guion (por ejemplo, 1234567-8).</li>
+  <li>Esperá el mensaje verde <b>“Stock y precios confirmados”</b>.</li>
+</ol>
+<div class="box rule"><strong>Pedidos con grabado personalizado</strong>Para que se empiece a producir, es obligatorio registrar una <b>seña mínima de Gs. 20.000</b> y adjuntar el <b>comprobante de transferencia</b> (foto JPG o PNG, hasta 5 MB). En “Datos para transferencia”, tocá <b>Mostrar</b> para ver la cuenta y pasársela al cliente.</div>
+
+<h3>6. Resumen y envío</h3>
+<ol class="steps">
+  <li>Tocá <b>Resumen del pedido</b> y revisá todo: cliente, dirección, productos, forma de pago, seña y <b>saldo a cobrar</b>.</li>
+  <li>Si algo está mal, tocá <b>Volver a editar</b>. Si está todo bien, tocá <b>Confirmar y enviar pedido</b>.</li>
+  <li>Vas a ver el mensaje <b>“¡Pedido enviado!”</b> con el número de tu pedido. Anotalo para hacer el seguimiento.</li>
+</ol>
+
+<h3>7. Seguimiento</h3>
+<ol class="steps">
+  <li>Abrí el menú <b>☰</b> y entrá en <b>Pedidos</b>.</li>
+  <li>Buscá por número de pedido, nombre del cliente o documento, o filtrá por estado.</li>
+  <li>Fijate en qué estado está (por ejemplo, <b>En aprobación</b> mientras se valida la seña, o <b>En camino</b>) y tocá <b>Detalle</b> para ver todo el pedido.</li>
+  <li>Avisale al cliente cuando su pedido salga y escribile después para saber si llegó bien.</li>
+</ol>
+
+<div class="box rule"><strong>Importante</strong>Antes de confirmar, revisá dos veces el producto, el modelo, la cantidad y la dirección. Un error en el pedido es un viaje perdido y un cliente molesto.</div>
+
+<h3>¿Cuándo cobrás tu comisión?</h3>
+<p>Las comisiones se pagan <b>una vez por mes</b>, después del cierre. Todas tus ventas de un mes se pagan <b>entre el 2 y el 4 del mes siguiente</b>, por <b>transferencia</b>.</p>
+<p>Al cerrar el mes te compartimos un <b>PDF</b> donde ves, venta por venta, lo que vendiste y la comisión que te corresponde por cada una. Por ahora la comisión no se ve en la app: ese PDF es tu resumen.</p>
+`},
+{id:"publicaciones", t:"Cómo hacer tus publicaciones", d:"Marketplace, WhatsApp y redes: dónde publicar, cómo generar confianza y qué textos usar.", html:`
+<h2>Cómo hacer tus publicaciones</h2>
+<p>Publicar todos los días es lo que hace que te lleguen consultas. No hace falta ser experta en redes: con estas pautas alcanza.</p>
+
+<h3>Tu mejor herramienta: el catálogo de la app</h3>
+<p>Desde la app tenés un catálogo con todos los productos para compartir con tus clientes. Tiene un enlace de WhatsApp que <b>siempre lleva a tu número</b>.</p>
+<div class="box tip"><strong>¿Por qué es una gran ventaja?</strong>Imaginate que sos Juan Pérez y le compartís tu catálogo a una prima. A ella le gusta y se lo reenvía a una amiga, que a su vez lo pasa a su grupo de la oficina. Cada persona que toque el botón de WhatsApp, sin importar quién le haya pasado el catálogo, le escribe a Juan. Cuanto más circula tu catálogo, más clientes te llegan a vos.</div>
+<div class="box note"><strong>Ojo: la venta es tuya cuando vos la cargás</strong>Si alguien vio tu catálogo pero va directo al local sin escribirte, esa venta no queda a tu nombre. Pedile siempre que te escriba, y si quiere retirar en el local, cargá vos el pedido como <b>Retiro</b>.</div>
+<p>Por eso, compartilo en todos lados: estados, grupos, mensajes directos y redes. Y pedile a tus clientes que lo pasen.</p>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Mensaje para compartir el catálogo</span>¡Hola! 😊 Te paso mi catálogo de Family Center con todos los productos y precios. Si algo te gusta, tocá el botón de WhatsApp y me escribís directo. ¡Y si conocés a alguien que le pueda interesar, pasáselo! 👇
+[LINK DE TU CATÁLOGO]</div>
+
+<h3>Dónde publicar</h3>
+<table>
+<tr><th>Canal</th><th>Qué hacer</th><th>Frecuencia</th></tr>
+<tr><td><b>Facebook Marketplace</b></td><td><b>Es donde más se vende.</b> Una publicación por producto, con buenas fotos, descripción completa y el precio actualizado.</td><td><b>Todos los días</b></td></tr>
+<tr><td>Estados de WhatsApp</td><td>Fotos de productos con precio y una frase corta, para tus contactos.</td><td>3 a 5 estados por día</td></tr>
+<tr><td>Grupos de compra y venta</td><td>Publicaciones en grupos de tu ciudad o barrio, respetando sus reglas.</td><td>1 a 2 por día</td></tr>
+<tr><td>Instagram (historias)</td><td>Fotos, videos cortos mostrando el producto, encuestas.</td><td>Diario</td></tr>
+</table>
+
+<h3>Marketplace: tu vidriera principal</h3>
+<p>Marketplace es el lugar donde más se vende, sobre todo si publicás <b>todos los días</b>. Para sacarle el máximo provecho, cuidá estos tres puntos:</p>
+
+<h3>1. Generá confianza</h3>
+<p>En Marketplace hay mucha gente que hace estafas, y los compradores lo saben. Por eso desconfían de perfiles nuevos o vacíos. Tu trabajo es mostrar que sos una persona real y que detrás hay una tienda de verdad:</p>
+<ul>
+  <li>Usá un perfil de Facebook <b>real</b>, con tu foto y tus datos, no uno creado solo para vender.</li>
+  <li>Contá en la descripción que sos vendedora o vendedor de <b>Family Center</b> y que el cliente también puede <b>retirar en el local</b>.</li>
+  <li>Usá fotos claras del producto (las del grupo Vendedores Externos) y describí bien lo que es.</li>
+  <li>Respondé rápido, con amabilidad y siempre con la verdad sobre stock, precio y entrega. Si algo se agotó, decilo y ofrecé una alternativa.</li>
+  <li>Juntá <b>calificaciones</b>: son la mejor prueba de que sos de confianza (mirá el punto 2).</li>
+</ul>
+
+<h3>2. Pedí siempre la calificación</h3>
+<p>Cuando alguien te escribe y ya intercambiaron <b>3 o 4 mensajes seguidos</b>, Marketplace te muestra automáticamente un botón para <b>pedirle que te califique</b>. Usalo siempre.</p>
+<div class="box tip"><strong>¿Por qué es tan importante?</strong>Las calificaciones hacen que Marketplace muestre tus publicaciones a <b>más personas</b>. Y cuando un comprador nuevo ve que tenés buenas calificaciones, confía más en vos. Más calificaciones = más alcance = más ventas.</div>
+
+<h3>3. Mantené los precios actualizados</h3>
+<p>Los precios cambian, y una publicación vieja con un precio viejo espanta a los clientes.</p>
+<div class="box rule"><strong>Ejemplo real</strong>Publicaste un celular Redmi Note 15 a Gs. 1.300.000 y lo dejaste ahí. Un mes después el precio bajó a Gs. 1.100.000, pero tu publicación sigue mostrando el precio viejo. La gente lo ve más caro que en otros lados y <b>ni siquiera te escribe</b>.</div>
+<ul>
+  <li>Revisá seguido en la app el precio de lo que tenés publicado.</li>
+  <li>Si un precio cambió, <b>editá y actualizá la misma publicación</b>. Es mejor que borrarla y volver a publicarla: una publicación actualizada tiene más peso en Marketplace.</li>
+</ul>
+
+<h3>¿Y si un producto se queda sin stock?</h3>
+<p><b>No borres la publicación.</b> Si la borrás, ese cliente ni siquiera te va a escribir. Dejala, y cuando te consulten, aprovechá para <b>recomendar un modelo similar</b> que sí tengamos en la app, contando qué mejoras o ventajas tiene.</p>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Producto sin stock · ofrecer otro modelo</span>¡Hola! Justo ese modelo se nos agotó 😕 Pero te puedo ofrecer el [MODELO SIMILAR], que está a Gs. [PRECIO] y además tiene [mejora 1] y [mejora 2]. ¿Querés que te pase fotos?</div>
+<div class="box tip"><strong>Probá esta estrategia</strong>Una consulta por un producto agotado sigue siendo un cliente interesado. Muchas ventas salen de ofrecer una buena alternativa.</div>
+
+<h3>Configurá tu WhatsApp Business</h3>
+<ol class="steps">
+  <li>Foto de perfil clara (tuya o del logo que te pasemos) y nombre: <i>“Tu nombre · Family Center”</i>.</li>
+  <li>En “Descripción”, contá qué vendés y tu zona de entrega.</li>
+  <li>En “Sitio web” o en la descripción, poné el <b>link de tu catálogo</b> de la app.</li>
+  <li>Activá el <b>mensaje de bienvenida</b> (abajo tenés uno listo para copiar).</li>
+</ol>
+
+<h3>Fotos que venden</h3>
+<ul>
+  <li><b>Usá las fotos que compartimos en el grupo Vendedores Externos.</b> Tienen mejor calidad que las de la app, que pierden un poco de calidad al subirse.</li>
+  <li>Las fotos que ya están en la app o en el grupo son las que tenés para trabajar: <b>no hace falta pedirlas de nuevo</b>.</li>
+  <li>Siempre poné el <b>precio</b>. Las publicaciones sin precio generan consultas que no terminan en venta.</li>
+</ul>
+<div class="box note"><strong>¿Y si un cliente pide una foto especial?</strong>Por ejemplo, el producto en la mano o desde otro ángulo. En algunos casos podés pedirla en el grupo de <b>Consultas</b>, pero tené en cuenta que el equipo del salón también atiende a sus propios clientes y <b>puede demorar</b>. No le prometas al cliente que se la mandás enseguida: mientras tanto, respondele con las fotos y la información que ya tenés.</div>
+<p>Usá esos minutos de espera a tu favor. Explicarle que la foto te la pasa un compañero del local le muestra al cliente que detrás hay una <b>tienda real con un equipo</b>, y eso genera confianza:</p>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Mientras esperás la foto · no estás en el local</span>¡Claro! Ahora mismo no me encuentro en el local, pero ya le pedí a un compañero que me pase la foto. Apenas me la manden te la reenvío 😊 Mientras tanto, ¿querés que te cuente más del producto?</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Mientras esperás la foto · mucho movimiento</span>¡Sí, te consigo! Ahora estamos con bastante movimiento, dame un ratito y te paso la foto apenas la tenga 🙌 Mientras tanto contame, ¿es para vos o para regalo?</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Cuando llega la foto</span>¡Listo! Acá te paso la foto que me mandaron del local 📸 [FOTO] ¿Qué te parece? Si te gusta, te lo cargo hoy y te llega en el transcurso del día.</div>
+<div class="box tip"><strong>Aprovechá la espera</strong>Mientras tanto, seguí la conversación: contale beneficios, preguntale para quién es, contale que el stock se mueve rápido. Y cuando mandes la foto, cerrá con una pregunta para avanzar con la venta. Si la foto tarda mucho, avisale con un mensaje corto para que no sienta que lo olvidaste.</div>
+
+<h3>Textos listos para usar</h3>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Publicación de producto</span>✨ [NOMBRE DEL PRODUCTO] ✨
+[1 o 2 beneficios: para qué sirve, por qué gusta]
+💰 Precio: Gs. [PRECIO MINORISTA]
+🎨 Disponible en: [colores / modelos]
+🚚 Entregas en [zona] | Retiro en [lugar]
+📲 Escribime al [tu número] y te paso más info
+🛍️ Mirá todo mi catálogo acá: [LINK DE TU CATÁLOGO]</div>
+
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Estado de WhatsApp · urgencia</span>¡Últimas unidades! 🔥 [PRODUCTO] a Gs. [PRECIO]. Respondé este estado y te paso los detalles 👇</div>
+
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Mensaje de bienvenida automático</span>¡Hola! 👋 Gracias por escribirme. Soy [tu nombre], vendedora de Family Center. Contame qué producto te interesa y te paso precio, fotos y disponibilidad 😊</div>
+
+<div class="box tip"><strong>Tip de horarios</strong>Los momentos con más movimiento suelen ser temprano a la mañana, al mediodía y de 19 a 22 h. Probá y fijate en qué horarios te escriben más.</div>
+
+<div class="box rule"><strong>Lo que no se publica</strong>Precios distintos al minorista que figura en la app (ni más altos ni desactualizados), promociones que la tienda no lanzó, fotos de otras marcas o de internet, y comentarios sobre otros vendedores del equipo.</div>
+`},
+{id:"cerrar-ventas", t:"Atención y cierre de ventas", d:"Cómo responder, manejar objeciones y lograr el “sí”.", html:`
+<h2>Atención y cierre de ventas</h2>
+<p>La mayoría de las ventas se pierden por responder tarde o no hacer la pregunta final. Este es el camino de una conversación que termina en venta.</p>
+
+<ol class="steps">
+  <li><b>Respondé rápido.</b> Idealmente en menos de 15 minutos. El cliente que pregunta suele preguntar a varios a la vez.</li>
+  <li><b>Saludá y preguntá.</b> Antes de largar toda la información, entendé qué busca: ¿para quién es?, ¿qué color?, ¿para cuándo lo necesita?</li>
+  <li><b>Presentá el producto</b> con fotos reales, precio claro y uno o dos beneficios que respondan a lo que te dijo.</li>
+  <li><b>Respondé las dudas</b> con seguridad (mirá las objeciones de abajo).</li>
+  <li><b>Pedí la venta.</b> No esperes a que el cliente lo diga: preguntale directamente.</li>
+  <li><b>Hacé seguimiento.</b> Si no responde, volvé a escribirle al día siguiente con un mensaje amable.</li>
+</ol>
+
+<h3>Frases para cerrar</h3>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Cierre con opciones</span>¿Te lo preparo en [color A] o en [color B]? 😊</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Cierre con entrega</span>Si me confirmás hoy, te lo cargamos para [hoy / mañana] y te llega en el transcurso del día. ¿Te lo cargo?</div>
+<div class="tpl"><button class="copy">Copiar</button><span class="lbl">Seguimiento al día siguiente</span>¡Hola [nombre]! ¿Pudiste pensarlo? Te aviso que todavía hay [producto] en el color que te gustó, pero el stock se mueve rápido. Si querés, te lo cargo hoy 😊</div>
+
+<div class="box rule"><strong>No hacemos reservas sin seña</strong>Tenemos poco stock de cada producto. Si reservamos para un cliente que después no pasa a retirar o cambia de opinión, podemos perder la venta con otra persona que estaba interesada. Por eso <b>solo se guarda un producto si el cliente deja una seña</b> de como mínimo el <b>20% del valor total</b>. Nunca le digas “te lo reservo” o “te lo separo” sin seña.</div>
+
+<h3>Cuando el cliente duda</h3>
+<p>Estas son las dudas que más vas a escuchar antes de una venta. <b>Tocá cada una</b> para ver qué conviene responder; la mayoría trae un mensaje listo para copiar.</p>
+<details><summary>“Está caro” / “¿Me hacés un descuento?”</summary>
+<p>No bajes el precio: es el precio oficial y es el mismo en la tienda. Resaltá el valor.</p>
+<div class="tpl"><button class="copy">Copiar</button>Te entiendo. Es el precio oficial, el mismo que vas a encontrar en la tienda, y te llevás [beneficio: calidad, garantía, durabilidad]. Además podés elegir recibirlo por delivery o retirarlo en el local, como te quede más cómodo 😊</div></details>
+<details><summary>“Lo voy a pensar”</summary>
+<div class="tpl"><button class="copy">Copiar</button>¡Claro! ¿Hay algo que te genere duda? Así te ayudo a decidir. Te comento que el stock de este modelo se mueve rápido. Si querés asegurarlo, podés dejar una seña del 20% y te lo guardamos.</div></details>
+<details><summary>“¿Y si me sale fallado?” / “¿Tiene garantía?”</summary><p>Dale tranquilidad: si el producto tiene una falla o llega en mal estado, se le cambia sin problema.</p><div class="tpl"><button class="copy">Copiar</button>¡Quedate tranquilo/a! Si el producto llega con alguna falla o en mal estado, te lo cambiamos sin problema. Y si fue por delivery, te llevamos el nuevo y hacemos el cambio ahí mismo 😊</div></details>
+<details><summary>“¿Por qué te compro a vos y no en la tienda?”</summary>
+<div class="tpl"><button class="copy">Copiar</button>Es exactamente el mismo producto y el mismo precio que en la tienda, porque soy parte del equipo de Family Center. La diferencia es que yo te atiendo personalmente y te ayudo con todo: elegir el producto, cargar tu pedido y coordinar la entrega o el retiro en el local.</div></details>
+<details><summary>No responde más</summary>
+<p>Un seguimiento al día siguiente y otro a los 3–4 días. Después, dejalo y volvé a escribirle cuando haya una novedad o producto nuevo. Nunca insistas de forma pesada.</p></details>
+
+<div class="box tip"><strong>Cuidá a tus clientes</strong>Un cliente bien atendido te vuelve a comprar y te recomienda. Guardá su contacto con una etiqueta (“Cliente”, “Interesado”) en WhatsApp Business y avisale cuando entren novedades.</div>
+`},
+{id:"reglas", t:"Reglas del equipo", d:"Lo que sí y lo que no, para que todos ganemos.", html:`
+<h2>Reglas del equipo</h2>
+<p>Estas reglas protegen tu comisión, a los clientes y la imagen de Family Center.</p>
+<table>
+<tr><th>✅ Sí</th><th>❌ No</th></tr>
+<tr><td>Vender siempre al precio minorista oficial.</td><td>Hacer descuentos, regalar envíos o cambiar precios por tu cuenta.</td></tr>
+<tr><td>Consultar el stock en la app antes de confirmar.</td><td>Prometer productos, colores o fechas que no están confirmados.</td></tr>
+<tr><td>Avisar que el delivery llega en el transcurso del día.</td><td>Prometer una hora exacta de entrega.</td></tr>
+<tr><td>Guardar un producto solo si el cliente deja una seña (mínimo 20%).</td><td>Decir “te lo reservo” o “te lo separo” sin seña.</td></tr>
+<tr><td>Mantener tus publicaciones con el precio actual de la app.</td><td>Dejar publicaciones con precios viejos.</td></tr>
+<tr><td>Usar las fotos, textos y el catálogo oficiales.</td><td>Inventar promociones o características del producto.</td></tr>
+<tr><td>Cargar cada pedido completo en la app.</td><td>Tomar pedidos por fuera de la app o con datos incompletos.</td></tr>
+<tr><td>Avisarle al cliente que un retiro sin seña no queda preparado y vence ese mismo día.</td><td>Pasarle solo el número de pedido sin explicarle cómo funciona.</td></tr>
+<tr><td>Cuidar tu usuario y contraseña.</td><td>Compartir tu acceso a la app con otras personas.</td></tr>
+<tr><td>Tratar con respeto a clientes y compañeros.</td><td>Hablar mal de otros vendedores o “robar” clientes del equipo.</td></tr>
+<tr><td>Cargar los cambios por falla en <b>Reclamos y cambios</b> de la app.</td><td>Aceptar devoluciones porque al cliente “no le gustó”.</td></tr>
+<tr><td>Vender como mínimo <b>Gs. 200.000 por mes</b>.</td><td>Quedarte meses sin vender.</td></tr>
+</table>
+<div class="box rule"><strong>Si no se cumplen</strong>Estas reglas existen para cuidar a los clientes, a tus compañeros y tu propia comisión. Si no se respetan, nos vemos en la decisión de <b>apartar a la persona del equipo</b>.</div>
+`},
+{id:"preguntas", t:"Preguntas frecuentes", d:"Las dudas de siempre, ya respondidas.", html:`
+<h2>Preguntas frecuentes</h2>
+<p><b>Tocá cada pregunta</b> para ver la respuesta.</p>
+<details><summary>¿Tengo que invertir dinero para empezar?</summary><p><b>No, no hace falta invertir nada.</b> Solo necesitás tu celular, acceso a internet y muchas ganas de vender.</p></details>
+<details><summary>¿Cuánto puedo ganar?</summary><p>Depende de cuánto vendas: ganás la diferencia entre el Mayorista 2 y el minorista en cada venta. Usá la calculadora del <a href="#bienvenida">módulo 1</a> para hacer tu cuenta.</p></details>
+<details><summary>¿Cuándo me pagan la comisión?</summary><p>Una vez por mes, después del cierre: entre el <b>2 y el 4 del mes siguiente</b>, por <b>transferencia</b>.</p></details>
+<details><summary>¿Dónde veo cuánto gané?</summary><p>Al cerrar cada mes te compartimos un <b>PDF</b> con el detalle de cada venta que hiciste y la comisión de cada una. Por ahora la comisión no se ve en la app.</p></details>
+<details><summary>¿Puedo vender a otro precio si el cliente me pide?</summary><p>No. El precio minorista es el mismo para todos. Mirá la <a href="#bienvenida">regla de oro</a>.</p></details>
+<details><summary>¿Dónde veo el stock disponible?</summary><p>En la app, en todo momento. No hace falta preguntar ni descargar nada.</p></details>
+<details><summary>¿Cómo cargo un pedido?</summary><p>Desde la app: productos, entrega, cliente y pago, y al final confirmás en el resumen. Hay un video explicativo. Mirá el paso a paso en el <a href="#cargar-pedidos">módulo 3</a>.</p></details>
+<details><summary>Me olvidé mi contraseña o no puedo entrar a la app</summary><p>Escribí en el grupo de <b>Consultas</b> y te ayudamos a recuperar el acceso.</p></details>
+<details><summary>¿Cómo me entero de los productos nuevos?</summary><p>En la app los productos nuevos aparecen <b>siempre primero</b>, al inicio y en <b>Realizar pedido</b>, marcados como nuevos: tanto los que llegan por primera vez como los que volvieron a ingresar. Además los avisamos en el grupo Vendedores Externos, junto con sus fotos.</p></details>
+<details><summary>¿Cuándo una venta queda a mi nombre?</summary><p>La venta es tuya <b>cuando vos la cargás en la app</b>. Si compartiste tu catálogo y ese cliente va directo al local sin escribirte, esa venta no te corresponde. Por eso, si tu cliente quiere retirar en el local, <b>cargá vos el pedido como Retiro</b>: así queda a tu nombre.</p></details>
+<details><summary>¿Cuánto cuesta el delivery?</summary><p>La app lo calcula sola según la zona cuando pegás la ubicación de Google Maps del cliente, y lo suma al total.</p></details>
+<details><summary>¿Puedo reservarle un producto a un cliente?</summary><p>Solo si deja una seña de como mínimo el <b>20% del valor total</b>. Como tenemos poco stock de cada producto, no reservamos sin seña: si el cliente no aparece, perdemos la venta con otra persona interesada.</p></details>
+<details><summary>El cliente quiere su pedido a una hora exacta, ¿qué le digo?</summary><p>Que le llega en el transcurso del día. El delivery sale en tandas (hoy son dos: mañana y tarde) según la cantidad de pedidos, así que no podemos garantizar una hora exacta. Tratá de que te dé el horario más amplio posible y anotá en la observación del pedido si hay algún horario en que no puede recibir.</p></details>
+<details><summary>¿Dónde y en qué horario se retira en el local?</summary><p>Todos los pedidos se retiran en la sucursal de <b>Eusebio Ayala</b>, frente al Colegio Nacional de la Capital, de <b>7:30 a 17:00</b>.. Es la sucursal mejor ubicada y con estacionamiento; la del Mercado no se usa para retiros.</p></details>
+<details><summary>El cliente quiere mandar a buscar su pedido con una moto Bolt, ¿cómo hago?</summary><p>Cargá el pedido como <b>Retiro</b>. Cuando en la app aparezca como <b>Listo</b>, avisale al cliente que pida el Bolt y pasale el número de pedido. El motorista entra al local, dice el número y se le entrega.</p></details>
+<details><summary>El cliente no quiere pasarme su cédula, ¿qué hago?</summary><p>Si el pedido es para <b>retiro en el local</b>, cargalo como <b>cliente indefinido</b>: escribí <b>XXX</b> en lugar del número de cédula y completá su nombre y celular. Para delivery, la cédula se sigue pidiendo.</p></details>
+<details><summary>¿Qué pasa con un pedido para retiro sin seña?</summary><p>No se prepara hasta que el cliente llega al local, el producto se puede vender antes en el salón y el pedido <b>caduca y se elimina automáticamente</b> a las 17:00–17:30 de ese día. Avisale siempre esto al cliente. Si querés asegurarle el producto, recomendale una seña de como mínimo el 20%.</p></details>
+<details><summary>El cliente quiere cambiar o devolver un producto, ¿qué hago?</summary><p><b>Si el producto tiene una falla o llegó en mal estado:</b> se cambia sin problema. Cargá el reclamo en la sección <b>Reclamos y cambios</b> de la app. Si el pedido fue por delivery, se le lleva el producto nuevo y se hace el cambio en el momento.</p><p><b>Si no le gustó:</b> no aceptamos cambios ni devoluciones. Lo que sí podemos hacer es recibir el producto como <b>parte de pago</b>: el cliente paga la diferencia y se lleva otro.</p></details>
+<details><summary>¿Hay un mínimo de ventas por mes?</summary><p><b>Sí.</b> Tenés que vender como mínimo <b>Gs. 200.000 todos los meses</b> para seguir en el equipo.</p></details>
+<details><summary>¿Puedo usar el nombre y logo del negocio?</summary><p>Sí, sin problema, siempre y cuando seas parte del equipo de vendedores externos de Family Center.</p></details>
+`},
+{id:"evaluacion", t:"Evaluación final", d:"16 preguntas rápidas para confirmar que estás lista o listo.", quiz:true, html:`
+<h2>Evaluación final</h2>
+<p>Respondé estas preguntas. Si acertás todas, ¡ya podés empezar a vender!</p>
+<div class="quiz" id="quiz"></div>
+<div class="result" id="qres" style="display:none"></div>
+`}
+];
+
+const QUIZ = [
+ {q:"¿De dónde sale tu comisión?", o:["Un porcentaje fijo que paga la tienda","La diferencia entre el precio Mayorista 2 y el minorista","Lo que le cobres de más al cliente"], a:1, f:"Tu ganancia es la diferencia entre Mayorista 2 y minorista en cada venta."},
+ {q:"Un cliente te pide un descuento. ¿Qué hacés?", o:["Le bajo un poco para no perder la venta","Le explico que es el precio oficial y resalto el valor del producto","Le subo el precio a otro cliente para compensar"], a:1, f:"El precio no se toca: cualquier descuento sale de tu comisión."},
+ {q:"¿Qué hacés antes de confirmarle un pedido al cliente?", o:["Confirmo el stock en la app","Le pido que me pague todo","Nada, lo confirmo directamente"], a:0, f:"Siempre se confirma el stock en la app antes de prometer."},
+ {q:"Tu cliente reenvía tu catálogo a una amiga y ella toca el botón de WhatsApp. ¿A quién le escribe?", o:["A la tienda","A vos","A cualquier vendedor del equipo"], a:1, f:"El enlace del catálogo siempre lleva a tu número, por eso conviene que circule."},
+ {q:"¿Cuándo cobrás la comisión de lo que vendiste en un mes?", o:["Al día siguiente de cada venta","Entre el 2 y el 4 del mes siguiente","A fin de año"], a:1, f:"La comisión se paga una vez por mes, entre el 2 y el 4 del mes siguiente, después del cierre."},
+ {q:"Un cliente pregunta a qué hora exacta le llega el delivery. ¿Qué le respondés?", o:["A las 10 en punto, para dejarlo contento","Que le llega en el transcurso del día, porque el delivery sale por tandas","Que no sabés y que pregunte en la tienda"], a:1, f:"El delivery sale por tandas según la cantidad de pedidos: nunca prometas una hora exacta."},
+ {q:"En Marketplace, después de 3 o 4 mensajes con un cliente aparece un botón para pedir calificación. ¿Qué hacés?", o:["Lo ignoro, no sirve para nada","Lo uso siempre: las calificaciones hacen que mis publicaciones lleguen a más personas","Solo lo uso si el cliente compró algo caro"], a:1, f:"Las calificaciones dan confianza y hacen que Marketplace muestre tus publicaciones a más gente."},
+ {q:"Publicaste un producto hace un mes y ahora en la app está más barato. ¿Qué hacés?", o:["Lo dejo así, total el que pregunta se entera","Actualizo la publicación con el precio nuevo","Le cobro el precio viejo al que me escriba"], a:1, f:"Con un precio desactualizado la gente ni te escribe: editá la publicación con el precio nuevo."},
+ {q:"Te escriben por un producto de tu publicación que se quedó sin stock. ¿Qué hacés?", o:["Borro la publicación y no respondo","Le aviso que se agotó y le recomiendo un modelo similar, contándole sus mejoras","Le digo que sí hay y después veo"], a:1, f:"Una consulta por un producto agotado sigue siendo un cliente: ofrecé una buena alternativa."},
+ {q:"Un cliente te pide que le guardes un producto hasta el fin de semana. ¿Qué le respondés?", o:["Que sí, sin problema","Que solo podemos guardarlo si deja una seña del 20%","Que no se puede y listo"], a:1, f:"No hacemos reservas sin seña: tenemos poco stock y podemos perder la venta con otro cliente."},
+ {q:"A un cliente no le gustó el producto y quiere devolverlo. ¿Qué le ofrecés?", o:["Le devuelvo la plata","Recibir el producto como parte de pago: paga la diferencia y se lleva otro","Lo cargo en Reclamos como si tuviera falla"], a:1, f:"Por gusto no se aceptan devoluciones, pero se puede tomar como parte de pago. Los cambios en Reclamos son solo por falla o mal estado."},
+ {q:"Un cliente vio tu catálogo y quiere retirar en el local. ¿Cómo hacés para que la venta sea tuya?", o:["Le digo que vaya al local y diga mi nombre","Cargo yo el pedido en la app como Retiro","No hace falta nada, el catálogo ya es mío"], a:1, f:"La venta es tuya cuando vos la cargás en la app."},
+ {q:"Cargás un pedido para retiro SIN seña. ¿Qué tenés que avisarle al cliente?", o:["Solo el número de pedido","Que no queda preparado, que el producto se puede vender antes y que el pedido vence ese día a la tarde","Que lo esperamos el día que pueda"], a:1, f:"Sin seña el pedido no se prepara ni se guarda, y caduca a las 17:00–17:30. Si es la última unidad, recomendá la seña."},
+ {q:"Tu cliente quiere mandar a buscar su pedido con un Bolt. ¿Qué hacés?", o:["Le digo que pida el Bolt ya y que diga su nombre en el local","Lo cargo como Retiro y, cuando aparece Listo en la app, le paso el número de pedido para el motorista","Lo cargo como delivery"], a:1, f:"El motorista retira indicando el número de pedido, y el Bolt se pide recién cuando el pedido está listo."},
+ {q:"¿Qué no puede faltar en una publicación?", o:["Muchos emojis","El precio","Una foto de internet"], a:1, f:"Las publicaciones sin precio generan consultas que no terminan en venta."},
+ {q:"El cliente dice “lo voy a pensar” y no responde más. ¿Qué hacés?", o:["Le escribo varias veces por día","Lo dejo y no vuelvo a escribir nunca","Le hago un seguimiento amable al día siguiente"], a:2, f:"Un seguimiento amable recupera muchas ventas."}
+];
+
+const KEY="academia-vendedores-progreso";
+let done={};
+try{done=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+
+/* ====== CONFIGURACIÓN DEL ACCESO ====== */
+const FORM_INSCRIPCION="https://tally.so/r/aO5drE";
+const APP_URL="https://familycenter.top/";
+const GRUPOS=[ // links de invitación a los grupos de WhatsApp (vacío = el equipo los agrega)
+  {nombre:"Vendedores Externos", url:"https://chat.whatsapp.com/DhsyQ1A6Ap91Sz03vLKz3e"},
+  {nombre:"La Nueva Era (Consultas)", url:"https://chat.whatsapp.com/GE3SpGLewSl60U7CLNxRov"}
+];
+/* ====================================== */
+const SKEY="acceso-vendedores-estado";
+let st={};
+try{st=JSON.parse(localStorage.getItem(SKEY)||"{}")}catch(e){}
+function saveSt(){try{localStorage.setItem(SKEY,JSON.stringify(st))}catch(e){}}
+let TOAST="";
+
+function guideFrac(){return MODULES.filter(m=>done[m.id]).length/MODULES.length}
+function stepState(){
+  const s1=!!st.insc, s2=!!done.evaluacion, s3=!!st.aviso, s4=!!st.app, s5=!!st.grupos;
+  return [s1,s2,s3,s4,s5];
+}
+function percent(){
+  const [s1,s2,s3,s4,s5]=stepState();
+  let p=0; if(s1)p+=15;
+  p+= s2?45:Math.round(45*guideFrac());
+  if(s3)p+=15; if(s4)p+=15; if(s5)p+=10;
+  return Math.min(100,p);
+}
+function updateProgress(){
+  const p=percent();
+  document.getElementById("ptext").textContent=p+"%";
+  document.getElementById("pbar").style.width=p+"%";
+}
+function setSt(k){st[k]=true;saveSt();render()}
+
+function home(){
+  const [s1,s2,s3,s4,s5]=stepState(), p=percent();
+  const cur=[s1,s2,s3,s4,s5].indexOf(false);
+  const cls=i=>([s1,s2,s3,s4,s5][i]?"ok":(i===cur?"current":"locked"));
+  const lbl=i=>([s1,s2,s3,s4,s5][i]?"✓ Completado":(i===cur?"Paso actual":"Bloqueado"));
+  const nmods=MODULES.filter(m=>done[m.id]).length;
+  const avisoUrl=FORM_GUIA+"?puntaje="+encodeURIComponent((st.score||QUIZ.length)+"/"+QUIZ.length);
+  const grupos=GRUPOS.filter(g=>g.url);
+  return `<section class="hero">
+    <div class="kicker">Tu acceso al equipo</div>
+    <h1>Acceso a Vendedores Externos</h1>
+    <p>Seguí estos 5 pasos para sumarte al equipo de Family Center. Tu avance se guarda en este celular: entrá siempre desde el mismo dispositivo.</p>
+    <div class="pct">${p}%</div>
+    <div class="bigbar"><i style="width:${p}%"></i></div>
+    ${p===100?'<p style="color:var(--ok);font-weight:700">🎉 ¡Bienvenida/o al equipo de Vendedores Externos Family!</p>':''}
+    ${TOAST?`<div class="toast">${TOAST}</div>`:''}
+  </section>
+
+  <div class="step ${cls(0)}"><div class="head"><div class="num">${s1?'✓':1}</div><div style="flex:1">
+    <div class="status">${lbl(0)}</div><h3>Completá el formulario de inscripción</h3>
+    <p>Tus datos y unas preguntas cortas. Te lleva unos 3 minutos.</p>
+    ${!s1?`<a class="btn" href="${FORM_INSCRIPCION}" target="_blank" rel="noopener">Ir al formulario</a>
+    <button class="linkish" onclick="setSt('insc')">Ya lo envié y no se marcó</button>`:''}
+  </div></div></div>
+
+  <div class="step ${cls(1)}"><div class="head"><div class="num">${s2?'✓':2}</div><div style="flex:1">
+    <div class="status">${lbl(1)}</div><h3>Completá la guía y aprobá la evaluación</h3>
+    <p>${nmods} de ${MODULES.length} módulos completados. Recorrelos en orden: aprendés cómo ganás, cómo cargar pedidos, cómo publicar y cómo vender.</p>
+    ${s1?`<div class="mini">${MODULES.map((m,i)=>`<div class="mod ${done[m.id]?'is-done':''}" onclick="go('${m.id}')"><span class="done">✓</span><div class="n">Módulo ${i+1}</div><h3>${m.t}</h3></div>`).join("")}</div>`:''}
+  </div></div></div>
+
+  <div class="step ${cls(2)}"><div class="head"><div class="num">${s3?'✓':3}</div><div style="flex:1">
+    <div class="status">${lbl(2)}</div><h3>Avisanos que terminaste</h3>
+    <p>${s3?'Recibimos tu aviso. Ahora el equipo de Family Center va a crear tu usuario: te lo enviamos por WhatsApp junto con un link para seguir desde acá.':'Completá tus datos para que te creemos tu usuario de la app.'}</p>
+    ${s2&&!s3?`<a class="btn" style="background:#1f9d55" href="${avisoUrl}" target="_blank" rel="noopener">Avisar que terminé la guía</a>
+    <button class="linkish" onclick="setSt('aviso')">Ya lo envié y no se marcó</button>`:''}
+  </div></div></div>
+
+  <div class="step ${cls(3)}"><div class="head"><div class="num">${s4?'✓':4}</div><div style="flex:1">
+    <div class="status">${s3&&!st.usuario&&!s4?'Esperando al equipo':lbl(3)}</div><h3>Recibí tu usuario y entrá a la app</h3>
+    <p>${st.usuario||s4?'¡Tu usuario ya está listo! Entrá a la app con el usuario y la contraseña que te enviamos por WhatsApp.':'Cuando tu usuario esté creado, te mandamos por WhatsApp tu usuario, tu contraseña y un link que te trae de vuelta acá.'}</p>
+    ${st.usuario&&!s4?`<a class="btn" href="${APP_URL}" target="_blank" rel="noopener">Abrir la app</a>
+    <button class="btn ghost" style="margin-left:6px" onclick="setSt('app')">Ya entré a la app</button>`:''}
+  </div></div></div>
+
+  <div class="step ${cls(4)}"><div class="head"><div class="num">${s5?'✓':5}</div><div style="flex:1">
+    <div class="status">${lbl(4)}</div><h3>Unite a los grupos de WhatsApp</h3>
+    <p>${s5?'¡Ya sos parte del equipo! Recordá: en <b>Vendedores Externos</b> están las novedades y fotos, y en <b>La Nueva Era</b> hacés tus consultas.':'El último paso: los grupos <b>Vendedores Externos</b> (novedades y fotos) y <b>La Nueva Era</b> (consultas).'}</p>
+    ${s4&&!s5?(grupos.length?grupos.map(g=>`<a class="btn" style="background:#1f9d55;margin-right:6px" href="${g.url}" target="_blank" rel="noopener">Unirme a ${g.nombre}</a>`).join("")+`<button class="linkish" onclick="setSt('grupos')">Ya me uní a los dos grupos</button>`
+      :`<p>El equipo te va a agregar a los dos grupos.</p><button class="btn" onclick="setSt('grupos')">Ya estoy en los grupos</button>`):''}
+  </div></div></div>`;
+}
+
+function lesson(m){
+  const i=MODULES.indexOf(m), next=MODULES[i+1];
+  return `<button class="back" onclick="go('')">← Volver a mi avance</button>
+  <article class="lesson">${m.html}
+    <div class="finish">
+      <button class="btn ${done[m.id]?'done':''}" id="markbtn">${done[m.id]?'✓ Completado':'Marcar como completado'}</button>
+      ${next?`<button class="btn ghost" onclick="go('${next.id}')">Siguiente: ${next.t} →</button>`:''}
+    </div>
+  </article>`;
+}
+
+const HASH_ACTIONS={
+  "inscripcion-ok":["insc","✅ ¡Recibimos tu inscripción! Ya podés empezar con la guía."],
+  "aviso-ok":["aviso","✅ ¡Recibimos tu aviso! Ahora esperá el mensaje del equipo con tu usuario."],
+  "usuario-listo":["usuario","🎉 ¡Tu usuario está listo! Entrá a la app con los datos que te mandamos."]
+};
+function render(){
+  let id=(location.hash||"").slice(1);
+  if(HASH_ACTIONS[id]){
+    const [k,msg]=HASH_ACTIONS[id]; st[k]=true;
+    if(k==="usuario"){st.insc=true;st.aviso=true;done.evaluacion=true;save()}
+    saveSt(); TOAST=msg; id="";
+    try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+  }
+  const m=st.insc?MODULES.find(x=>x.id===id):null;
+  const app=document.getElementById("app");
+  app.innerHTML=m?lesson(m):home();
+  if(!m) TOAST="";
+  window.scrollTo(0,0);
+  updateProgress();
+  if(!m) return;
+  document.getElementById("markbtn").onclick=function(){
+    done[m.id]=!done[m.id]; save(); updateProgress();
+    this.classList.toggle("done",!!done[m.id]);
+    this.textContent=done[m.id]?"✓ Completado":"Marcar como completado";
+  };
+  app.querySelectorAll(".copy").forEach(b=>b.onclick=async e=>{
+    e.stopPropagation();
+    const c=b.parentElement.cloneNode(true); c.querySelectorAll(".copy,.lbl").forEach(x=>x.remove());
+    const txt=c.textContent.trim();
+    try{await navigator.clipboard.writeText(txt);b.textContent="¡Copiado!"}catch(err){b.textContent="Seleccioná y copiá"}
+    setTimeout(()=>b.textContent="Copiar",1800);
+  });
+  app.querySelectorAll("table").forEach(t=>{const hs=[...t.rows[0].cells].map(c=>c.textContent.trim());[...t.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>c.setAttribute("data-label",hs[i]||"")))});
+  app.querySelectorAll(".chap").forEach(c=>c.onclick=()=>{const v=document.getElementById("vid");v.currentTime=+c.dataset.t;v.play().catch(()=>{});v.scrollIntoView({behavior:"smooth",block:"center"})});
+  if(m.id==="cargar-pedidos") setupVideo();
+  if(m.id==="bienvenida") setupCalc();
+  if(m.quiz) setupQuiz(m);
+}
+
+/* ====== AVISO DE GUÍA COMPLETADA ====== */
+const FORM_GUIA="https://tally.so/r/peyOPZ";
+const NOTIFY_HTML=`<a id="n_btn" class="btn" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:14px;background:#1f9d55">Avisar que terminé la guía</a>`;
+function setupNotify(score){
+  document.getElementById("n_btn").href=FORM_GUIA+"?puntaje="+encodeURIComponent(score+"/"+QUIZ.length);
+}
+
+let VIDEO_URL=null;
+async function setupVideo(){
+  const v=document.getElementById("vid"), msg=document.getElementById("vidmsg");
+  if(!v) return;
+  try{
+    if(!VIDEO_URL){
+      const r=await fetch("pedido.mp4");
+      if(!r.ok) throw new Error(r.status);
+      VIDEO_URL=URL.createObjectURL(await r.blob());
+    }
+    if(!document.body.contains(v)) return;
+    v.src=VIDEO_URL; msg.style.display="none";
+  }catch(e){
+    v.src="pedido.mp4";
+    msg.textContent="Si el video no se reproduce, recargá la página o probá desde otro navegador.";
+  }
+}
+
+function setupCalc(){
+  const f=n=>"Gs. "+Math.round(n).toLocaleString("es-PY");
+  const calc=()=>{
+    const g=+c1.value||0,u=+c3.value||0;
+    cres.innerHTML=g>0?`Ganás <b>${f(g)}</b> por unidad → <b>${f(g*u)}</b> por semana · aprox. <b>${f(g*u*4)}</b> por mes.<br><span style="font-size:.85rem;color:var(--muted)">Es un cálculo de referencia: la comisión real depende de cada producto.</span>`:"Ingresá una comisión por venta.";
+  };
+  [c1,c3].forEach(x=>x.oninput=calc); calc();
+}
+
+function setupQuiz(m){
+  const box=document.getElementById("quiz"); let answered=0, right=0;
+  box.innerHTML=QUIZ.map((q,i)=>`<div class="q" data-i="${i}"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join("")}<div class="fb"></div></div>`).join("");
+  box.querySelectorAll(".q").forEach(qd=>{
+    const q=QUIZ[+qd.dataset.i];
+    qd.querySelectorAll(".opt").forEach(btn=>btn.onclick=()=>{
+      if(qd.dataset.ok) return; qd.dataset.ok=1; answered++;
+      const j=+btn.dataset.j;
+      qd.querySelectorAll(".opt")[q.a].classList.add("right");
+      if(j===q.a) right++; else btn.classList.add("wrong");
+      qd.querySelector(".fb").textContent=(j===q.a?"¡Correcto! ":"No exactamente. ")+q.f;
+      if(answered===QUIZ.length){
+        const r=document.getElementById("qres"); r.style.display="block";
+        if(right===QUIZ.length){
+          st.score=right; saveSt();
+          r.innerHTML="🎉 <b>"+right+"/"+QUIZ.length+"</b> ¡Excelente! Ya terminaste la guía. Ahora avisanos con el botón para que te creemos tu usuario de la app."+NOTIFY_HTML;
+          setupNotify(right);
+          done[m.id]=true; save(); updateProgress();
+          const mb=document.getElementById("markbtn"); mb.classList.add("done"); mb.textContent="✓ Completado";
+        } else r.innerHTML="Acertaste <b>"+right+"/"+QUIZ.length+"</b>. Repasá los módulos y volvé a intentarlo (recargá esta sección).";
+      }
+    });
+  });
+}
+
+function go(id){ if(id) location.hash=id; else { try{history.replaceState(null,"",location.pathname+location.search)}catch(e){location.hash=""} render(); } }
+window.addEventListener("hashchange",render);
+render();
+</script>
+</body>
+</html>
