@@ -156,6 +156,39 @@
   .pill{font-size:.7rem;font-weight:700;background:var(--brand);color:var(--dark);border-radius:99px;padding:3px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
   @media (max-width:560px){.pill{display:none}}
   .kicker{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+
+  /* ===== Tema oscuro ===== */
+  :root{--bg:#0b0b0c;--card:#17171a;--ink:#f4f4f5;--muted:#a1a1aa;--line:#2a2a2f;--accent:#facc15;--accent-soft:#2a2306;--ok:#4ade80;--ok-soft:#0f2a1a;--warn-soft:#2a2306}
+  body{background:var(--bg);color:var(--ink)}
+  .bg-logos{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  header.top{background:#000;border-bottom:1px solid var(--line)}
+  .btn{background:var(--brand);color:#18181b}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid #3f3f46}
+  .btn.done{background:#15803d;color:#fff}
+  .tpl{background:#111113;border-color:#3f3f46}
+  .copy{background:#27272a;color:var(--ink);border-color:#3f3f46}
+  .copy:hover{border-color:var(--brand);color:var(--brand)}
+  th{background:#111113 !important}
+  details,.quiz .opt,.calc input,.mod,.lesson,.step{background:var(--card)}
+  .box.rule{background:#241f08;border-left-color:var(--brand)}
+  .box.tip{background:#0f2418;border-left-color:#22c55e}
+  .box.note{background:#1c1c20;border-left-color:#52525b}
+  .result{background:#0f2418}
+  .quiz .opt.right{background:#0f2418;border-color:#22c55e}
+  .quiz .opt.wrong{background:#2a1010;border-color:#ef4444}
+  .step.ok .num{background:#000;color:var(--brand);border:1px solid #3f3f46}
+  .step.current{box-shadow:0 0 0 3px rgba(234,179,8,.18)}
+  .step.ok .status{color:#d4d4d8}
+  .mini .mod.is-done{background:#241f08;border-color:#4d3d07}
+  .mod .done{background:var(--brand);color:#18181b}
+  .bigbar{background:#27272a}
+  summary::after{color:#18181b;background:var(--brand)}
+  details[open] summary::after{color:var(--ink);background:#27272a}
+  .ph{background:#3a2f06;color:#fde68a}
+  a{color:var(--brand)}
+  .toast{background:#0f2418;border-left-color:#22c55e}
+  .tools input,input,textarea{background:#111113;color:var(--ink);border-color:#3f3f46}
+  @media (max-width:560px){tr{background:var(--card) !important}}
 </style>
 </head>
 <body>
