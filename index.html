@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Acceso a Vendedores Externos Family</title>
+<title>Vendedores Externos Family · Ganá dinero extra desde tu casa</title>
+<meta name="description" content="Vendé los productos de Family Center desde tu celular y ganá una comisión por cada venta. Sin invertir y a tu ritmo.">
+<meta property="og:title" content="Ganá dinero extra desde tu casa con Family Center">
+<meta property="og:description" content="Sumate al equipo de Vendedores Externos: sin inversión, desde tu celular y en tus ratos libres.">
+<meta property="og:image" content="https://familycenter-ventas.github.io/logo-family.png">
+<meta property="og:url" content="https://familycenter-ventas.github.io/">
+<meta name="theme-color" content="#0b0b0c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -192,6 +198,17 @@
   .toast{background:#0f2418;border-left-color:#22c55e}
   .tools input,input,textarea{background:#111113;color:var(--ink);border-color:#3f3f46}
   @media (max-width:560px){tr{background:var(--card) !important}}
+  .pitch{padding:22px 0 26px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .pitch h1.big{font-size:2.3rem;line-height:1.08;letter-spacing:-.03em;margin:.15em 0 .35em}
+  .pitch h1.big span{color:var(--brand)}
+  .pitch .lead{font-size:1.08rem;color:#d4d4d8;margin:0 0 18px;max-width:620px}
+  .perks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:20px}
+  .perk{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .perk b{display:block;color:var(--brand);font-size:.98rem;margin-bottom:3px}
+  .perk span{color:var(--muted);font-size:.88rem;line-height:1.45;display:block}
+  .btn.cta{display:block;text-align:center;font-size:1.08rem;padding:16px;border-radius:12px;text-decoration:none}
+  .fine{text-align:center;color:var(--muted);font-size:.85rem;margin:10px 0 0}
+  @media (max-width:560px){.pitch h1.big{font-size:2rem}.perks{gap:8px}.perk{padding:12px}}
 </style>
 </head>
 <body>
@@ -634,11 +651,25 @@ function home(){
   const nmods=MODULES.filter(m=>done[m.id]).length;
   const avisoUrl=FORM_GUIA+"?puntaje="+encodeURIComponent((st.score||QUIZ.length)+"/"+QUIZ.length);
   const grupos=GRUPOS.filter(g=>g.url);
-  return `<section class="hero">
+  const pitch=!s1?`<section class="pitch">
     <img class="hero-logo" src="logo-family.png" alt="Family Center">
-    <div class="kicker">Tu acceso al equipo</div>
-    <h1>Acceso a Vendedores Externos</h1>
-    <p>Seguí estos 5 pasos para sumarte al equipo de Family Center. Tu avance se guarda en este celular: entrá siempre desde el mismo dispositivo.</p>
+    <div class="kicker">Vendedores Externos Family</div>
+    <h1 class="big">Ganá dinero extra <span>desde tu casa</span>, a tu ritmo.</h1>
+    <p class="lead">Vendé los productos de Family Center desde tu celular y ganá una comisión por cada venta. Sin invertir y sin horarios fijos: ideal para sumar ingresos sin dejar tu trabajo.</p>
+    <div class="perks">
+      <div class="perk"><b>Sin inversión</b><span>No comprás stock. Solo necesitás tu celular e internet.</span></div>
+      <div class="perk"><b>En tus ratos libres</b><span>Vendés cuando podés: antes, después o en medio de tu trabajo.</span></div>
+      <div class="perk"><b>Tu propio catálogo</b><span>Con un link que lleva a los clientes directo a tu WhatsApp.</span></div>
+      <div class="perk"><b>Nosotros entregamos</b><span>Vos cargás el pedido; del delivery y el stock se encarga Family.</span></div>
+    </div>
+    <a class="btn cta" href="${FORM_INSCRIPCION}" target="_blank" rel="noopener">Quiero sumarme al equipo</a>
+    <p class="fine">Cuanto más vendés, más ganás. Inscribirte lleva 3 minutos.</p>
+  </section>`:"";
+  return `${pitch}<section class="hero">
+    ${s1?'<img class="hero-logo" src="logo-family.png" alt="Family Center">':''}
+    <div class="kicker">${s1?'Tu acceso al equipo':'Cómo sumarte'}</div>
+    <h1>${s1?'Acceso a Vendedores Externos':'Tu camino al equipo, en 5 pasos'}</h1>
+    <p>${s1?'Seguí los pasos para sumarte al equipo de Family Center. Tu avance se guarda en este celular: entrá siempre desde el mismo dispositivo.':'Inscribite, completá la guía, recibí tu usuario y unite a los grupos. Tu avance se guarda en este celular.'}</p>
     <div class="pct">${p}%</div>
     <div class="bigbar"><i style="width:${p}%"></i></div>
     ${p===100?'<p style="color:var(--ok);font-weight:700">🎉 ¡Bienvenida/o al equipo de Vendedores Externos Family!</p>':''}
