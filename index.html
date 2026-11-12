@@ -718,8 +718,8 @@ function home(){
   </div></div></div>
 
   <div class="step ${cls(3)}"><div class="head"><div class="num">${s4?'✓':4}</div><div style="flex:1">
-    <div class="status">${s3&&!st.usuario&&!s4?'Esperando al equipo':lbl(3)}</div><h3>Recibí tu usuario y entrá a la app</h3>
-    <p>${st.usuario||s4?'¡Tu usuario ya está listo! Entrá a la app con el usuario y la contraseña que te enviamos por WhatsApp.':'Cuando tu usuario esté creado, te mandamos por WhatsApp tu usuario, tu contraseña y un link que te trae de vuelta acá.'}</p>
+    <div class="status">${s3&&!st.usuario&&!s4?'⏳ Esperando al equipo':lbl(3)}</div><h3>Recibí tu usuario y entrá a la app</h3>
+    <p>${st.usuario||s4?'¡Tu usuario ya está listo! Entrá a la app con el usuario y la contraseña que te enviamos por WhatsApp.':(s3?'<b>No tenés que hacer nada más por ahora.</b> El equipo de Family Center está revisando tus datos y tu identidad para crear tu usuario. Suele demorar hasta 24 horas hábiles. Te vamos a escribir por WhatsApp con tu usuario, tu contraseña y un link que te trae de vuelta acá para seguir.':'Cuando tu usuario esté creado, te mandamos por WhatsApp tu usuario, tu contraseña y un link que te trae de vuelta acá.')}</p>
     ${st.usuario&&!s4?`<a class="btn" href="${APP_URL}" target="_blank" rel="noopener">Abrir la app</a>
     <button class="btn ghost" style="margin-left:6px" onclick="setSt('app')">Ya entré a la app</button>`:''}
   </div></div></div>
