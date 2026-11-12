@@ -712,7 +712,7 @@ function home(){
 
   <div class="step ${cls(2)}"><div class="head"><div class="num">${s3?'✓':3}</div><div style="flex:1">
     <div class="status">${lbl(2)}</div><h3>Avisanos que terminaste</h3>
-    <p>${s3?'Recibimos tu aviso. Ahora el equipo de Family Center va a crear tu usuario: te lo enviamos por WhatsApp junto con un link para seguir desde acá.':'Completá tus datos y subí una foto de tu cédula y una selfie con ella: así confirmamos tu identidad y te creamos tu usuario de la app.'}</p>
+    <p>${s3?'Recibimos tu aviso. Ahora el equipo de Family Center va a crear tu usuario: te lo enviamos por WhatsApp junto con un link para seguir desde acá.':'Completá tus datos y mandanos una foto de tu cédula y una selfie con ella. <b>¿Por qué?</b> Hubo personas que se hicieron pasar por Family Center para estafar a clientes: verificar a cada vendedor protege a los clientes, al equipo y a vos. Tus fotos solo las ve el equipo de Family Center.<br><small>Si no te deja subir fotos, abrí esta página en Chrome o Safari (no dentro de TikTok o Instagram), o elegí mandarlas por WhatsApp.</small>'}</p>
     ${s2&&!s3?`<a class="btn" style="background:#1f9d55" href="${avisoUrl}" target="_blank" rel="noopener">Avisar que terminé la guía</a>
     <button class="linkish" onclick="setSt('aviso')">Ya lo envié y no se marcó</button>`:''}
   </div></div></div>
